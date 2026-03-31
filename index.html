@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaPrime | Sa'adatu Fisheries Executive Dashboard</title>
+    <title>AquaPrime | Sa'adatu Fisheries CEO Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -26,23 +26,23 @@
         header {
             background: linear-gradient(135deg, var(--primary), #001219);
             color: white;
-            padding: 4rem 1rem;
+            padding: 3rem 1rem;
             text-align: center;
             border-bottom: 8px solid var(--accent);
         }
 
         .container {
             max-width: 1200px;
-            margin: -50px auto 50px;
+            margin: -40px auto 50px;
             padding: 0 20px;
         }
 
-        /* 4-Column Grid for CEO Metrics */
+        /* Top Summary Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .card {
@@ -51,18 +51,10 @@
             border-radius: 12px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            border-top: 5px solid var(--secondary);
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: var(--secondary);
-        }
-
-        .card.gold::before { background: var(--accent); }
+        .card.money { border-top-color: var(--success); }
 
         .card h3 {
             margin: 0;
@@ -73,17 +65,33 @@
         }
 
         .card .value {
-            font-size: 2.2rem;
+            font-size: 2.8rem;
             font-weight: 700;
             margin: 10px 0;
             color: var(--primary);
         }
 
-        .card .subtitle {
-            font-size: 0.8rem;
-            color: #666;
+        /* Weekly Performance Row */
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 40px;
         }
 
+        .day-box {
+            background: #fff;
+            padding: 15px 5px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+        }
+
+        .day-name { font-weight: 700; font-size: 0.7rem; color: var(--primary); text-transform: uppercase; }
+        .day-value { font-size: 1.1rem; font-weight: 600; margin-top: 5px; color: var(--success); }
+
+        /* Data Table */
         .table-container {
             background: var(--card);
             padding: 2.5rem;
@@ -91,88 +99,65 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.05);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; background-color: #f8fafc; color: var(--primary); font-size: 0.85rem; border-bottom: 2px solid #eee; }
+        td { padding: 15px; border-bottom: 1px solid #f1f1f1; }
 
-        th {
-            text-align: left;
-            padding: 15px;
-            background-color: #f8fafc;
-            color: var(--primary);
-            font-size: 0.85rem;
-            border-bottom: 2px solid #eee;
-        }
-
-        td {
-            padding: 18px 15px;
-            border-bottom: 1px solid #f1f1f1;
-        }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+        .day-badge {
             font-weight: 600;
-            background: #e0f2f1;
-            color: var(--primary);
+            color: var(--secondary);
+            font-size: 0.85rem;
         }
 
-        .price-badge {
-            color: var(--success);
-            font-weight: 700;
+        @media (max-width: 800px) {
+            .weekly-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
-        footer {
-            text-align: center;
-            padding: 4rem;
-            font-size: 0.9rem;
-            color: #aaa;
-        }
+        footer { text-align: center; padding: 3rem; font-size: 0.85rem; color: #aaa; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="margin:0; font-size: 2.5rem;">AquaPrime Analytics</h1>
-    <p style="opacity: 0.8;">Sa'adatu Fisheries | Strategic CEO Intelligence</p>
+    <h1 style="margin:0;">Sa'adatu Fisheries</h1>
+    <p style="opacity: 0.8;">AquaPrime Analytics | Powered by Arabo M. Auwal</p>
 </header>
 
 <div class="container">
     <div class="stats-grid">
         <div class="card">
-            <h3>Total Volume</h3>
-            <div id="totalFish" class="value">...</div>
-            <div class="subtitle">Fishes Sold to Date</div>
+            <h3>Total Fish Sold</h3>
+            <div id="totalFish" class="value">0</div>
+            <p style="margin:0; color:#999;">Units to Date</p>
         </div>
-        <div class="card">
-            <h3>Total Revenue</h3>
-            <div id="totalRevenue" class="value" style="color: var(--success);">...</div>
-            <div class="subtitle">Gross Income (₦)</div>
-        </div>
-        <div class="card">
-            <h3>Avg. Price / Fish</h3>
-            <div id="avgPrice" class="value">...</div>
-            <div class="subtitle">Market Performance</div>
-        </div>
-        <div class="card gold">
-            <h3>Highest Daily Sale</h3>
-            <div id="topSale" class="value" style="color: var(--accent);">...</div>
-            <div id="topSaleDate" class="subtitle">Peak Record</div>
+        <div class="card money">
+            <h3>Total Sale Amount</h3>
+            <div id="totalRevenue" class="value" style="color: var(--success);">₦0</div>
+            <p style="margin:0; color:#999;">Gross Revenue</p>
         </div>
     </div>
 
+    <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 1rem;">Revenue Breakdown by Day of Week</h3>
+    <div class="weekly-grid" id="weeklyStats">
+        <div class="day-box"><div class="day-name">Sun</div><div id="val-Sun" class="day-value">₦0</div></div>
+        <div class="day-box"><div class="day-name">Mon</div><div id="val-Mon" class="day-value">₦0</div></div>
+        <div class="day-box"><div class="day-name">Tue</div><div id="val-Tue" class="day-value">₦0</div></div>
+        <div class="day-box"><div class="day-name">Wed</div><div id="val-Wed" class="day-value">₦0</div></div>
+        <div class="day-box"><div class="day-name">Thu</div><div id="val-Thu" class="day-value">₦0</div></div>
+        <div class="day-box"><div class="day-name">Fri</div><div id="val-Fri" class="day-value">₦0</div></div>
+        <div class="day-box"><div class="day-name">Sat</div><div id="val-Sat" class="day-value">₦0</div></div>
+    </div>
+
     <div class="table-container">
-        <h2 style="margin-bottom: 25px; color: var(--primary);">Full Sales Ledger</h2>
+        <h2 style="margin-bottom: 25px; color: var(--primary);">Live Sales Ledger</h2>
         <div style="overflow-x: auto;">
             <table id="salesTable">
                 <thead>
                     <tr>
-                        <th>Transaction Date</th>
-                        <th>Quantity Sold</th>
-                        <th>Unit Price (Avg)</th>
-                        <th>Total Revenue</th>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Quantity (Fish)</th>
+                        <th>Amount (₦)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -187,67 +172,72 @@
 </footer>
 
 <script>
+    // YOUR LIVE CSV LINK
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTyR4cz7LX8vR3FjPC2QtLWnOuvA8aY-t3MVT4IhruBGwo2cJdBo4JtMeesYzdNvdXWmi7TmdS3_bJp/pub?gid=1621479056&single=true&output=csv';
 
-    async function refreshCEOData() {
+    async function syncDashboard() {
         try {
             const response = await fetch(csvUrl);
-            const data = await response.text();
-            const rows = data.split('\n').slice(1); 
+            const rawData = await response.text();
+            
+            // Clean and Split Data
+            const rows = rawData.split('\n').slice(1); 
 
-            let totalFish = 0;
-            let totalCash = 0;
-            let maxSale = 0;
-            let maxSaleDate = "";
+            let grandTotalQty = 0;
+            let grandTotalMoney = 0;
 
+            // Reset Weekly Totals
+            const dayTotals = { "Sun": 0, "Mon": 0, "Tue": 0, "Wed": 0, "Thu": 0, "Fri": 0, "Sat": 0 };
+            
             const tableBody = document.querySelector('#salesTable tbody');
             tableBody.innerHTML = '';
 
             rows.forEach(row => {
-                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
 
-                if (cols.length >= 4) {
-                    const dateStr = cols[1].replace(/"/g, "");
-                    const qty = parseInt(cols[2]) || 0;
-                    const price = parseFloat(cols[3]) || 0;
+                if (columns.length >= 4) {
+                    const dateRaw = columns[1].replace(/"/g, "").trim();
+                    const qty = parseInt(columns[2]) || 0;
+                    const price = parseFloat(columns[3]) || 0;
 
-                    totalFish += qty;
-                    totalCash += price;
+                    // Calculate Day of Week
+                    const dateObj = new Date(dateRaw);
+                    const daysArr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                    const dayName = daysArr[dateObj.getDay()] || "N/A";
 
-                    // Track the record-breaking day
-                    if (price > maxSale) {
-                        maxSale = price;
-                        maxSaleDate = dateStr;
-                    }
+                    // Update Totals
+                    grandTotalQty += qty;
+                    grandTotalMoney += price;
+                    if(dayName !== "N/A") dayTotals[dayName] += price;
 
-                    // Calculation for table Unit Price
-                    const unitPrice = qty > 0 ? (price / qty).toFixed(2) : 0;
-
+                    // Create Table Row
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${dateStr}</td>
-                        <td><span class="badge">${qty.toLocaleString()} Fishes</span></td>
-                        <td>₦${unitPrice}</td>
-                        <td class="price-badge">₦${price.toLocaleString()}</td>
+                        <td>${dateRaw}</td>
+                        <td><span class="day-badge">${dayName}</span></td>
+                        <td style="font-weight: 600;">${qty.toLocaleString()}</td>
+                        <td style="color: var(--success); font-weight:700;">₦${price.toLocaleString()}</td>
                     `;
                     tableBody.prepend(tr);
                 }
             });
 
-            // Update CEO Cards
-            document.getElementById('totalFish').innerText = totalFish.toLocaleString();
-            document.getElementById('totalRevenue').innerText = '₦' + totalCash.toLocaleString();
-            document.getElementById('avgPrice').innerText = '₦' + (totalCash / (totalFish || 1)).toFixed(2);
-            document.getElementById('topSale').innerText = '₦' + maxSale.toLocaleString();
-            document.getElementById('topSaleDate').innerText = "Achieved on " + maxSaleDate;
+            // Update UI
+            document.getElementById('totalFish').innerText = grandTotalQty.toLocaleString();
+            document.getElementById('totalRevenue').innerText = '₦' + grandTotalMoney.toLocaleString();
+
+            for (let day in dayTotals) {
+                document.getElementById(`val-${day}`).innerText = '₦' + dayTotals[day].toLocaleString();
+            }
 
         } catch (err) {
-            console.error("Dashboard failed to sync:", err);
+            console.error("Dashboard connection lost:", err);
         }
     }
 
-    refreshCEOData();
-    setInterval(refreshCEOData, 120000);
+    // Initial load and periodic refresh
+    syncDashboard();
+    setInterval(syncDashboard, 60000); // Refreshes every 1 minute
 </script>
 
 </body>
